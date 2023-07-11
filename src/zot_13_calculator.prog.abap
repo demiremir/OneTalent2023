@@ -1,4 +1,5 @@
-REPORT zot_13_calculator.
+REPORT zot_06_calculator.
+
 SELECTION-SCREEN BEGIN OF BLOCK b1 WITH FRAME TITLE TEXT-001.
   PARAMETERS: p_val1 TYPE i,
               p_val2 TYPE i.
@@ -12,23 +13,46 @@ SELECTION-SCREEN BEGIN OF BLOCK b2 WITH FRAME TITLE TEXT-002.
 SELECTION-SCREEN END OF BLOCK b2.
 
 START-OF-SELECTION.
-  DATA(gv_val1) = p_val1.
-  DATA(gv_val2) = p_val2.
-  DATA gv_sonuc TYPE p DECIMALS 5.
-  IF p_topla = 'X'.
-    gv_sonuc = gv_val1 + gv_val2.
-  ELSEIF p_cikar = 'X'.
+DATA(gv_val1) = p_val1.
+DATA(gv_val2) = p_val2.
+DATA gv_sonuc TYPE p decimals 5.
+
+if p_topla = 'X'.
+
+  gv_sonuc = gv_val1 + gv_val2.
+
+  elseif p_cikar = 'X'.
+
     gv_sonuc = gv_val1 - gv_val2.
 
-  ELSEIF p_carp = 'X'.
+  elseif p_carp = 'X'.
 
     gv_sonuc = gv_val1 * gv_val2.
 
-  ELSEIF p_bol = 'X'.
+  elseif p_bol = 'X'.
 
-    gv_sonuc = gv_val1 / gv_val2.
+    if gv_val2 = 0.
 
-  ENDIF.
+    TRY.
 
-  cl_demo_output=>write( gv_sonuc ).
-  cl_demo_output=>display( ).
+        gv_sonuc = gv_val1 / 0.
+
+        CATCH cx_sy_zerodivide.
+
+        MESSAGE 'Invalid Statement' TYPE 'E'.
+
+        ENDTRY.
+
+        WRITE:  gv_val1.
+
+        endif.
+
+     gv_sonuc = gv_val1 / gv_val2.
+
+
+
+endif.
+
+
+cl_demo_output=>write( gv_sonuc ).
+cl_demo_output=>display(  ).
